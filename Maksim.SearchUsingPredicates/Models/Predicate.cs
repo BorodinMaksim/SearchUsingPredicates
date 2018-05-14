@@ -2,7 +2,7 @@
 {
     public class Predicate
     {
-        public bool IsInverted { get; set; }
+        public bool IsNotNegative { get; set; }
 
         public string Value { get; set; }
     }

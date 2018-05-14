@@ -6,7 +6,7 @@ namespace Maksim.SearchUsingPredicates.Models
     {
         public Predicate FirstPredicate { get; set; }
 
-        public LogicalOperand Operand { get; set; }
+        public bool IsAndOperator { get; set; }
 
         public Predicate SecondPredicate { get; set; }
     }
