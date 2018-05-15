@@ -9,34 +9,38 @@ namespace Maksim.SearchUsingPredicates.Common
     {
         public ParsedSearchString Parse(string searchString)
         {
+            Predicate firstPredicate = null;
+            Predicate secondPredicate = null;
+            bool parsedOperand = false;
+
             string[] elements = searchString.Split(' ');
-            var firstPredicate = elements[0];
-            var secondPredicate = elements[2];
-            var operand = elements[1];
-            Tuple<bool, string> firstParsedPredicate = this.ParsePredicate(firstPredicate);
-            Tuple<bool, string> secondParsedPredicate = this.ParsePredicate(secondPredicate);
-            var parsedOperand = operand.Equals("&&", StringComparison.CurrentCultureIgnoreCase);
+
+            if (elements.Length > 0)
+            {
+                var firstStringPredicate = elements[0];
+                firstPredicate = this.ParsePredicate(firstStringPredicate);
+                if (elements.Length > 2)
+                {
+                    var secondStringPredicate = elements[2];
+                    secondPredicate = this.ParsePredicate(secondStringPredicate);
+                    var operand = elements[1];
+                    parsedOperand = operand.Equals("&&", StringComparison.CurrentCultureIgnoreCase);
+                }
+            }
+
             return new ParsedSearchString
                 {
-                   FirstPredicate = new Predicate
-                       {
-                           IsNotNegative = firstParsedPredicate.Item1,
-                           Value = firstParsedPredicate.Item2
-                       },
-                   SecondPredicate = new Predicate
-                       {
-                           IsNotNegative = secondParsedPredicate.Item1,
-                           Value = secondParsedPredicate.Item2
-                       },
+                   FirstPredicate = firstPredicate,
+                   SecondPredicate = secondPredicate,
                    IsAndOperator = parsedOperand
                 };
         }
 
-        private Tuple<bool, string> ParsePredicate(string predicate)
+        private Predicate ParsePredicate(string predicateString)
         {
-            return predicate.Trim().StartsWith("!")
-                       ? new Tuple<bool, string>(false, predicate.Substring(1))
-                       : new Tuple<bool, string>(true, predicate);
+            return predicateString.Trim().StartsWith("!")
+                       ? new Predicate(false, predicateString.Substring(1))
+                       : new Predicate(true, predicateString);
         }
     }
 }

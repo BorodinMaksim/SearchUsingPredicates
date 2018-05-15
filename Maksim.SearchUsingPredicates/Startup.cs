@@ -26,14 +26,16 @@ namespace Maksim.SearchUsingPredicates
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseMvc();
             app.Run(async (context) => { await context.Response.WriteAsync("Hello World"); });
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SearchContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SearchContext>(
+                options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
             services.AddNotebookService();
             services.AddPredicateParser();
             services.AddMvc();

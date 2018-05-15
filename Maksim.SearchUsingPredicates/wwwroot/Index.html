@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Search notebooks</title>
+    <link href="lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="lib/jquery/dist/jquery.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Search notebooks</h2>
+        <form name="notebooksForm">
+                <input type="hidden" name="id" value="0" />
+                <div class="form-group">
+                    <label for="searchString">Input search string:</label>
+                    <input class="form-control" name="searchString" />
+                </div>
+                <div class="panel-body">
+                    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                    <a id="reset" class="btn btn-sm btn-primary">Reset</a>
+                </div>
+        </form>
+        <table class="table table-condensed table-striped table-bordered">
+                <thead><tr><th>Name</th></tr></thead>
+                <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        function SearchNotebooks(searchString) {
+            $.ajax({
+                url: '/api/values/' + searchString,
+                type: 'GET',
+                contentType: "application/json",
+                success: function (notebooks) {
+                    var rows = "";
+                    $.each(notebooks,
+                        function(index, notebook) {
+                            rows += row(notebook);
+                        });
+                    $("table tbody").append(rows);
+                }
+            });
+        }
+
+        function reset() {
+            var form = document.forms["notebooksForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+
+        var row = function (notebook) {
+            return "<tr data-rowid='" + notebook.Id + "'><td>" + notebook.Name + "</td></tr>";
+        }
+
+        $("#reset").click(function(e) {
+
+            e.preventDefault();
+            reset();
+        });
+
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var searchString = this.elements["searchString"].value;
+            SearchNotebooks(searchString);
+        });
+
+    </script>
+    </body>
+        </html>
