@@ -11,7 +11,6 @@
     <div class="container">
         <h2>Search notebooks</h2>
         <form name="notebooksForm">
-                <input type="hidden" name="id" value="0" />
                 <div class="form-group">
                     <label for="searchString">Input search string:</label>
                     <input class="form-control" name="searchString" />
@@ -46,15 +45,14 @@
         function reset() {
             var form = document.forms["notebooksForm"];
             form.reset();
-            form.elements["id"].value = 0;
+            $("table tbody tr").remove();
         }
 
         var row = function (notebook) {
-            return "<tr data-rowid='" + notebook.Id + "'><td>" + notebook.Name + "</td></tr>";
+            return "<tr data-rowid='" + notebook.id + "'><td>" + notebook.name + "</td></tr>";
         }
 
         $("#reset").click(function(e) {
-
             e.preventDefault();
             reset();
         });
