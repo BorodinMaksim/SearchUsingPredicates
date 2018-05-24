@@ -1,10 +1,8 @@
 ﻿using Maksim.SearchUsingPredicates.Common;
-using Maksim.SearchUsingPredicates.DAL;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,8 +32,7 @@ namespace Maksim.SearchUsingPredicates
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SearchContext>(
-                options => options.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection")));
+            services.AddJsonDataConection();
             services.AddNotebookService();
             services.AddPredicateParser();
             services.AddMvc();

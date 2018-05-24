@@ -13,32 +13,29 @@ namespace Maksim.SearchUsingPredicates.Common
             Predicate secondPredicate = null;
             bool parsedOperand = false;
 
-            string[] elements = searchString.Split(' ');
+            string[] elements = searchString.Split(new[] { "&&", "||" }, StringSplitOptions.None);
 
             if (elements.Length > 0)
             {
-                var firstStringPredicate = elements[0];
-                firstPredicate = this.ParsePredicate(firstStringPredicate);
-                if (elements.Length > 2)
+                firstPredicate = this.ParsePredicate(elements[0].Trim());
+                if (elements.Length > 1)
                 {
-                    var secondStringPredicate = elements[2];
-                    secondPredicate = this.ParsePredicate(secondStringPredicate);
-                    var operand = elements[1];
-                    parsedOperand = operand.Equals("&&", StringComparison.CurrentCultureIgnoreCase);
+                    secondPredicate = this.ParsePredicate(elements[1].Trim());
+                    parsedOperand = searchString.Contains("&&");
                 }
             }
 
             return new ParsedSearchString
-                {
-                   FirstPredicate = firstPredicate,
-                   SecondPredicate = secondPredicate,
-                   IsAndOperator = parsedOperand
-                };
+                       {
+                           FirstPredicate = firstPredicate,
+                           SecondPredicate = secondPredicate,
+                           IsAndOperator = parsedOperand
+                       };
         }
 
         private Predicate ParsePredicate(string predicateString)
         {
-            return predicateString.Trim().StartsWith("!")
+            return predicateString.StartsWith("!")
                        ? new Predicate(false, predicateString.Substring(1))
                        : new Predicate(true, predicateString);
         }

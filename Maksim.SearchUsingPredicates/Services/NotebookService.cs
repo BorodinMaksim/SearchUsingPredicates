@@ -10,11 +10,11 @@ namespace Maksim.SearchUsingPredicates.Services
 {
     public class NotebookService : INotebookService
     {
-        private SearchContext _context;
+        private IDataAccess _context;
 
         private IPredicateParser _predicateParser;
 
-        public NotebookService(IPredicateParser predicateParser, SearchContext context)
+        public NotebookService(IPredicateParser predicateParser, IDataAccess context)
         {
             this._predicateParser = predicateParser;
             this._context = context;
@@ -24,7 +24,7 @@ namespace Maksim.SearchUsingPredicates.Services
         {
             ParsedSearchString parsedSearchString = this._predicateParser.Parse(searchString);
             return this._context
-                .Notebooks
+                .NotebookList
                 .Where(QueryObject.GetExpression<Notebook>(parsedSearchString, nameof(Notebook.Name)));
         }
     }
